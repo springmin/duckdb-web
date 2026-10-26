@@ -68,3 +68,10 @@ cmake --build build/openharmony --parallel
   its metadata footer, so they can be `dlopen`ed on OpenHarmony.
 - The unittest binary is linked against the static DuckDB library on OpenHarmony because
   the shared library does not export the internal symbols used by the test helpers.
+- OpenHarmony builds link the shared C++ runtime (`libc++_shared.so`, provided by the
+  system). Keeping one C++ runtime across the host and loadable extensions is required
+  for exceptions thrown inside an extension to be caught by DuckDB.
+- The test suite needs a temporary directory on a filesystem with regular POSIX
+  permission and `O_DIRECT` support (for example `/data` on device). On `hmdfs`,
+  `chmod` and `O_DIRECT` are restricted; use `--temp-dir-root` to point the tests
+  elsewhere.
